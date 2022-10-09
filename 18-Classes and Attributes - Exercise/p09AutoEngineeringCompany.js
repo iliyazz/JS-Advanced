@@ -1,22 +1,20 @@
 function solve(inputArr) {
-    let allCars = new Map();
+    let allCars = {};
     for(let el of inputArr){
         [carBrand, carModel, producedCars] = el.split(' | ');
-        if(!allCars.has(carBrand)){
-            allCars.set(carBrand, new Map());
+        if(!allCars.hasOwnProperty(carBrand)){
+            allCars[carBrand]= {};
         }
-        if(!allCars.get(carBrand).has(carModel)){
-            allCars.get(carBrand).set(carModel, 0);
+        if(!allCars[carBrand].hasOwnProperty(carModel)){
+            allCars[carBrand][carModel] = 0;
         }
-        let oldProducedCar = allCars.get(carBrand).get(carModel);
-        allCars.get(carBrand).set(carModel, oldProducedCar + Number(producedCars));
+        allCars[carBrand][carModel] += Number(producedCars);
     }
     let result = [];
-    for(let [brandKey, brandValue] of allCars){
-        result.push(brandKey);
-        for(let [modelKey, modelValue] of brandValue){
-            result.push(`###${modelKey} -> ${modelValue}`);
-        }
+    for(let carBrand in allCars){
+        result.push(carBrand);
+        Object.entries(allCars[carBrand])
+        .forEach(element => result.push(`###${element[0]} -> ${element[1]}`));
     }
     console.log(result.join('\n'));
 }
