@@ -1,19 +1,24 @@
 solution = (() => {
+    let start = function call(post, token) {
+        let cmd = commands[token](post);
+        return cmd;
+    }
+    let obj = {
+        call: start
+    }
     const commands = {
-        upvote: (object) => (object.upvotes += 1),
-        downvote: (object) => (object.downvotes += 1),
-        score: (object) => {
-            const { upvotes, downvotes } = object;
+        upvote: function upvote(post) { post.upvotes += 1; },
+        downvote: function downvote(post) { post.downvotes += 1; },
+        score: function score(post) {
+            let upvotes = post.upvotes;
+            let downvotes = post.downvotes;
             let obfuscationNumber = 0;
-
-            const [total, balance] = [upvotes + downvotes, upvotes - downvotes];
-
+            let total = upvotes + downvotes;
+            let balance = upvotes - downvotes;
             if (total > 50) {
                 obfuscationNumber = Math.ceil(0.25 * Math.max(upvotes, downvotes));
             }
-
             let rating = 'new';
-
             if (total < 10) {
                 rating = 'new';
             }
@@ -26,12 +31,10 @@ solution = (() => {
             else if (balance < 0 && total >= 10) {
                 rating = 'unpopular';
             }
-
             return [upvotes + obfuscationNumber, downvotes + obfuscationNumber, balance, rating];
         },
     };
-    debugger
-    return { call: (object, argument) => commands[argument](object) };
+    return obj;
 })();
 
 
@@ -47,54 +50,8 @@ let post = {
 solution.call(post, 'upvote');
 solution.call(post, 'downvote');
 let score = solution.call(post, 'score'); // [127, 127, 0, 'controversial']
-solution.call(post, 'downvote');         // (executed 50 times)
-solution.call(post, 'downvote'); //1
-solution.call(post, 'downvote'); //2
-solution.call(post, 'downvote'); //3
-solution.call(post, 'downvote'); //4
-solution.call(post, 'downvote'); //5
-solution.call(post, 'downvote'); //6
-solution.call(post, 'downvote'); //7
-solution.call(post, 'downvote'); //8
-solution.call(post, 'downvote'); //9
-solution.call(post, 'downvote'); //10
-solution.call(post, 'downvote'); //1
-solution.call(post, 'downvote'); //2
-solution.call(post, 'downvote'); //3
-solution.call(post, 'downvote'); //4
-solution.call(post, 'downvote'); //5
-solution.call(post, 'downvote'); //6
-solution.call(post, 'downvote'); //7
-solution.call(post, 'downvote'); //8
-solution.call(post, 'downvote'); //9
-solution.call(post, 'downvote'); //10
-solution.call(post, 'downvote'); //1
-solution.call(post, 'downvote'); //2
-solution.call(post, 'downvote'); //3
-solution.call(post, 'downvote'); //4
-solution.call(post, 'downvote'); //5
-solution.call(post, 'downvote'); //6
-solution.call(post, 'downvote'); //7
-solution.call(post, 'downvote'); //8
-solution.call(post, 'downvote'); //9
-solution.call(post, 'downvote'); //10
-solution.call(post, 'downvote'); //1
-solution.call(post, 'downvote'); //2
-solution.call(post, 'downvote'); //3
-solution.call(post, 'downvote'); //4
-solution.call(post, 'downvote'); //5
-solution.call(post, 'downvote'); //6
-solution.call(post, 'downvote'); //7
-solution.call(post, 'downvote'); //8
-solution.call(post, 'downvote'); //9
-solution.call(post, 'downvote'); //10
-solution.call(post, 'downvote'); //1
-solution.call(post, 'downvote'); //2
-solution.call(post, 'downvote'); //3
-solution.call(post, 'downvote'); //4
-solution.call(post, 'downvote'); //5
-solution.call(post, 'downvote'); //6
-solution.call(post, 'downvote'); //7
-solution.call(post, 'downvote'); //8
-solution.call(post, 'downvote'); //9
+//debugger
+for (let i = 0; i < 50; i++) {
+    solution.call(post, 'downvote');         // (executed 50 times)
+}
 score = solution.call(post, 'score');     // [139, 189, -50, 'unpopular']
