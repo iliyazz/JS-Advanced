@@ -10,7 +10,7 @@ describe("Tests testNumbers", function () {
             assert.equal(testNumbers.sumNumbers('num1', -5), undefined);
             assert.equal(testNumbers.sumNumbers(-5, 'num1'), undefined);
         });
-        it("Test: ivalid input should return sum of numbers", function () {
+        it("Test: invalid input should return sum of numbers", function () {
 
             let expected1 = 15.1;
             let expected2 = -5.1;
