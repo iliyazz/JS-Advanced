@@ -1,7 +1,6 @@
 window.addEventListener("load", solve);
 
 function solve() {
-
   let make = document.getElementById('make');
   let model = document.getElementById('model');
   let year = document.getElementById('year');
@@ -9,29 +8,18 @@ function solve() {
   let originalCost = document.getElementById('original-cost');
   let sellingPrice = document.getElementById('selling-price');
   document.getElementById('publish').addEventListener('click', publish);
+  let tableBody = document.getElementById('table-body');
   let totalProfit = 0;
 
-  let tableBody = document.getElementById('table-body');
-  
   function publish(e) {
     e.preventDefault();
-    if (!make.value || !model.value || !year.value || !fuel.value || !originalCost.value || !sellingPrice.value || Number(originalCost.value) > Number(sellingPrice.value)) {
+
+    if (!make.value || !model.value || !year || !fuel.value || !originalCost.value || !sellingPrice.value || Number(originalCost.value) > Number(sellingPrice.value)) {
       return;
     }
-    createTable();
-    clearInputFields()
-  }
-  function clearInputFields(e){
-    make.value = '';
-    model.value = '';
-    year.value = '';
-    fuel.value = '';
-    originalCost.value = '';
-    sellingPrice.value = '';
-  }
-  function createTable(e) {
+
     let tr = document.createElement('tr');
-    tr.classList.add('row')
+    tr.classList.add('row');
 
     let tdMake = document.createElement('td');
     tdMake.innerText = make.value;
@@ -57,58 +45,70 @@ function solve() {
     tdSellingPrice.innerText = sellingPrice.value;
     tr.appendChild(tdSellingPrice);
 
-    let buttonsTd = document.createElement('td');
-    tr.appendChild(buttonsTd);
+    let tdBtn = document.createElement('td')
+    tr.appendChild(tdBtn);
 
-    let btnEdit = document.createElement('button')
-    btnEdit.classList.add('action-btn', 'edit');
-    btnEdit.textContent = 'Edit';
-    buttonsTd.appendChild(btnEdit);
+    let btnEdit = document.createElement('button', edit);
+    btnEdit.classList.add('action-btn');
+    btnEdit.classList.add('edit');
+    btnEdit.innerText = 'Edit'
     btnEdit.addEventListener('click', edit);
+    tdBtn.appendChild(btnEdit);
 
-    let btnSell = document.createElement('button');
-    btnSell.classList.add('action-btn', 'sell');
-    btnSell.textContent = 'Sell'
-    buttonsTd.appendChild(btnSell);
-    btnSell.addEventListener('click', sell);
+    let btnSell = document.createElement('button', edit);
+    btnSell.classList.add('action-btn');
+    btnSell.classList.add('sell');
+    btnSell.innerText = 'Sell'
+    btnSell.addEventListener('click', sell)
+    tdBtn.appendChild(btnSell);
+
+    let makeValue = make.value;
+    let modelValue = model.value;
+    let yearValue = year.value;
+    let fuelValue = fuel.value;
+    let originalCostValue = originalCost.value;
+    let sellingPriceValue = sellingPrice.value;
+
+    make.value = null;
+    model.value = null;
+    year.value = null;
+    fuel.value = null;
+    originalCost.value = null;
+    sellingPrice.value = null;
 
     tableBody.appendChild(tr);
-  }
 
-  function edit(e){
-    let dataArr = e.target.parentElement.parentElement.children;
-    make.value = dataArr[0].textContent;
-    model.value = dataArr[1].textContent;
-    year.value = dataArr[2].textContent;
-    fuel.value = dataArr[3].textContent;
-    originalCost.value = dataArr[4].textContent;
-    sellingPrice.value = dataArr[5].textContent;
-    e.target.parentNode.parentNode.remove();
-  }
-  function sell(e){
-    let dataArr = e.target.parentElement.parentElement.children;
-    let ulCarlist = document.getElementById('cars-list');
-    let li = document.createElement('li');
-    li.classList.add('each-list');
-    
-    let spanMakeModel = document.createElement('span');
-    spanMakeModel.innerText = `${dataArr[0].textContent} ${dataArr[1].textContent}`;
-    li.appendChild(spanMakeModel);
+    function edit(e) {
+      make.value = makeValue;
+      model.value = modelValue;
+      year.value = yearValue;
+      fuel.value = fuelValue;
+      originalCost.value = originalCostValue;
+      sellingPrice.value = sellingPriceValue;
+      e.target.parentElement.parentElement.remove();
+    }
+    function sell(e) {
+      let ul = document.getElementById('cars-list');
+      let li = document.createElement('li');
+      li.classList.add('each-list');
+      ul.appendChild(li);
 
-    let spanYear = document.createElement('span');
-    spanYear.innerText = dataArr[2].textContent;
-    li.appendChild(spanYear);
+      let spanMakeModel = document.createElement('span');
+      spanMakeModel.innerText = `${makeValue} ${modelValue}`;
+      li.appendChild(spanMakeModel);
 
-    let spanProfit = document.createElement('span');
-    let currentProfit = Number(dataArr[5].textContent) - Number(dataArr[4].textContent);
-    spanProfit.innerText = currentProfit;
-    li.appendChild(spanProfit);
-    
-    totalProfit += currentProfit;
+      let spanYear = document.createElement('span');
+      spanYear.innerText = yearValue;
+      li.appendChild(spanYear);
 
-    ulCarlist.appendChild(li);
-    e.target.parentNode.parentNode.remove();
+      let spanProfit = document.createElement('span');
+      spanProfit.innerText = Number(sellingPriceValue) - Number(originalCostValue);
+      li.appendChild(spanProfit);
 
-    document.getElementById('profit').textContent = totalProfit.toFixed(2);
+      totalProfit += Number(sellingPriceValue) - Number(originalCostValue);
+      document.getElementById('profit').innerText = totalProfit.toFixed(2);
+      
+      e.target.parentElement.parentElement.remove();
+    }
   }
 }
